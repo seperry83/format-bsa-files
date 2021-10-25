@@ -62,7 +62,7 @@ for (wkbk in excelFile) {
     # Export Dataframe 
     # ----
     # reorganize columns
-    dfAbund <- dfAbund[,c('sample','date','time','category','taxon','count','subsample','v1_ml','sub1_ml','v2_ml','sub2_ml')]
+    dfAbund <- dfAbund[,c('station','date','time','category','taxon','count','subsample','v1_ml','sub1_ml','v2_ml','sub2_ml')]
     
     # export CSV files into own folder
     fullPath <- paste(outputPath,excelName,'/', sep = '')
