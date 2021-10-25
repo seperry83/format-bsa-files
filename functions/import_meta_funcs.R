@@ -237,7 +237,7 @@ add_bottom_meta <- function(wkbk, sheetName, df) {
   df$high_silt <- is.na(df_bot[[9]][1])
   df$no_micro_tally <- is.na(df_bot[[13]][1])
   df$no_meso_tally <- is.na(df_bot[[20]][1])
-  df$net_size <- ifelse(is.na(df_bot[[5]][2]), '150um', '50um')
+  df$net_size <- ifelse(is.na(df_bot[[5]][2]), '50um', '150um')
   
   return(df)
 }
