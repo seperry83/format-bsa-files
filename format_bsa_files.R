@@ -1,5 +1,3 @@
-# !diagnostics off
-
 # BSA Data Format
 # extracting data from Excel workbook(s) and export as .csv files
 # output is a folder named after the workbook populated by the indvidual .csv files
@@ -9,8 +7,8 @@
 #~~~Variables to Edit~~~#
 #~~~~~~~~~~~~~~~~~~~~~~~~
 # name of excel workbook(s)
-filePath = 'C:/R/Zoop/'
-excelFile = c('extra_sheets.xlsx') # keep parentheses; add multiple excel files if wanted
+filePath = 'C:/R/format-bsa-files'
+excelFile = c('DataTemplateForR.xlsx') # keep parentheses; add multiple excel files if wanted
 
 # choose output path
 outputPath = filePath # will be created if it doesn't exist
@@ -24,7 +22,7 @@ library(readxl)
 library(janitor)
 library(tidyverse)
 
-# Extract Data
+# Extract the Data
 # create full file
 for (wkbk in excelFile) {
   excelBook <- paste(filePath,wkbk, sep='') # full path
@@ -44,7 +42,7 @@ for (wkbk in excelFile) {
       read_excel(
         wkbk
         ,sheet = sheetName
-        ,range = "A18:K65"
+        ,range = "A18:K81"
         ,col_types = dfTypes
         ,col_names = F
       )
@@ -55,7 +53,7 @@ for (wkbk in excelFile) {
       read_excel(
         wkbk
         ,sheet = sheetName
-        ,range= "Q18:AA63"
+        ,range= "Q18:AA81"
         ,col_types = dfTypes
         ,col_names = F
       )
@@ -64,7 +62,7 @@ for (wkbk in excelFile) {
     # combine the two data sets
     dfAll <- rbind(dfOne,dfTwo)
     
-    # Clean Data
+    # Clean Up Data
     # rename columns
     names(dfAll) <- c('taxon','count','subsample')
     
@@ -121,8 +119,8 @@ for (wkbk in excelFile) {
     dfAbund$count[is.na(dfAbund$count)] <- 0
     dfAbund$subsample[is.na(dfAbund$subsample)] <- 0
     
-    # Extract Metadata
-    #pull out date 
+    # Extract the Metadata
+    # pull out date 
     dfDate <- suppressMessages(
       read_excel(
         wkbk
@@ -257,11 +255,11 @@ for (wkbk in excelFile) {
       subTwo <- subTwoDf[,colSums(is.na(subTwoDf)) == 0][[1]] # collapse to value
       dfAbund$sub2_ml <- subTwo # append
     }
-  
+    
     # Export Dataframe 
     # reorganize columns
     dfAbund <- dfAbund[,c('sample','date','time','category','taxon','count','subsample','v1_ml','sub1_ml','v2_ml','sub2_ml')]
-  
+    
     # export CSV files into own folder
     fullPath <- paste(outputPath,excelName,'/', sep = '')
     fileName <- paste(fullPath,sampName,'_',dateDate,'.csv', sep = '')
