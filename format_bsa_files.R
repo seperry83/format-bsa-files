@@ -59,6 +59,9 @@ for (wkbk in excelFile) {
     # add sample number
     dfAbund <- add_samp_num(wkbk, sheetName, dfAbund) 
     
+    # add bottom meta
+    dfAbund <- add_bottom_meta(wkbk, sheetName, dfAbund)
+    
     # add tow
     dfAbund <- add_tow(wkbk, sheetName, dfAbund)
     
@@ -81,13 +84,20 @@ for (wkbk in excelFile) {
     # Export Dataframe 
     # ----
     # reorganize columns
-    dfAbund <- dfAbund[,c('project','station','date','time','samp_num','tow',
-                          'id_by','scope','mag','id_date','num_of_jars','num_of_vials',
+    dfAbund <- dfAbund[,c('project','station','date','time',
+                          'net_size','high_algae','high_detritus','high_silt','no_micro_tally','no_meso_tally',
+                          'samp_num','tow','id_by','scope','mag','id_date','num_of_jars','num_of_vials',
                           'category','taxon','count','subsample','v1_ml','sub1_ml','v2_ml','sub2_ml','vsed_ml')]
+    
+    
+    # define vals for export
+    date_col <- dfAbund$date[1]
+    stat_name <- dfAbund$station[1]
+    net_size <- dfAbund$net_size[1]
     
     # export CSV files into own folder
     fullPath <- paste(outputPath,excelName,'/', sep = '')
-    fileName <- paste(fullPath,sampName,'_',dateDate,'.csv', sep = '')
+    fileName <- paste(fullPath,stat_name,'_',date_col,'_',net_size,'.csv', sep = '')
     
     # create directory if it doesn't exist
     dir.create(file.path(fullPath), showWarnings = FALSE)

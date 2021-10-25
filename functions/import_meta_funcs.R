@@ -220,67 +220,27 @@ return(dfAbund)
 }
 
 # ----
-# add volumes
+# add bottom meta
 # ----
-add_vols <- function(wkbk, sheetName, dfAbund){
-  # import v1 df
-  vOneDf <- suppressMessages(
+add_bottom_meta <- function(wkbk, sheetName, df) {
+  df_bot <- suppressMessages(
     read_excel(
-      wkbk
-      ,sheet = sheetName
-      ,range = 'M9:Q9'
-      ,col_types = 'numeric'
-      ,col_names = F
+      wkbk,
+      sheet = sheetName,
+      range = 'E100:Y101',
+      col_names = F
     )
   )
   
-  # grab value/append to df
-  if (sum(vOneDf, na.rm = TRUE) == 0) {
-    print(paste('Check sheet',sheetName)) # error in sheet
-    dfAbund$v1_ml <- NA # append NA
-  } else {
-    vOne <- vOneDf[,colSums(is.na(vOneDf)) == 0][[1]] # collapse to value
-    dfAbund$v1_ml <- vOne # append
-  }
+  df$high_algae <- is.na(df_bot[[1]][1])
+  df$high_detritus <- is.na(df_bot[[5]][1])
+  df$high_silt <- is.na(df_bot[[9]][1])
+  df$no_micro_tally <- is.na(df_bot[[13]][1])
+  df$no_meso_tally <- is.na(df_bot[[20]][1])
+  df$net_size <- ifelse(is.na(df_bot[[5]][2]), '150um', '50um')
   
-  # import v2 df
-  vTwoDf <- suppressMessages(
-    read_excel(
-      wkbk
-      ,sheet = sheetName
-      ,range = 'C12:D12'
-      ,col_types = 'numeric'
-      ,col_names = F
-    )
-  )
-  
-  # grab value/append to df
-  if (sum(vTwoDf, na.rm = TRUE) == 0) {
-    print(paste('Check sheet',sheetName)) # error in sheet
-    dfAbund$v2_ml <- NA # append NA
-  } else {
-    vTwo <- vTwoDf[,colSums(is.na(vTwoDf)) == 0][[1]] # collapse to value
-    dfAbund$v2_ml <- vTwo # append
-  }
-  
-  return(dfAbund)
+  return(df)
 }
-
-  # import v_sed df
-  df_vsed <- suppressMessages(
-    read_excel(
-      wkbk
-      ,sheet = sheetName
-      ,range = 'M12:R12'
-      ,col_types = 'numeric'
-      ,col_names = F
-    )
-  )
-  
-  # grab value/append to df
-  v_sed <- df_vsed[,colSums(is.na(df_vsed)) == 0][[1]] # collapse to value
-  dfAbund$vsed_ml <- v_sed # append
-
 # ----
 # add subsamples
 # ----
@@ -325,5 +285,67 @@ add_subs <- function(wkbk, sheetName, dfAbund){
     dfAbund$sub2_ml <- subTwo # append
   }
   
+  return(dfAbund)
+}
+
+# ----
+# add volumes
+# ----
+add_vols <- function(wkbk, sheetName, dfAbund){
+  # import v1 df
+  vOneDf <- suppressMessages(
+    read_excel(
+      wkbk
+      ,sheet = sheetName
+      ,range = 'M9:Q9'
+      ,col_types = 'numeric'
+      ,col_names = F
+    )
+  )
+  
+  # grab value/append to df
+  if (sum(vOneDf, na.rm = TRUE) == 0) {
+    print(paste('Check sheet',sheetName)) # error in sheet
+    dfAbund$v1_ml <- NA # append NA
+  } else {
+    vOne <- vOneDf[,colSums(is.na(vOneDf)) == 0][[1]] # collapse to value
+    dfAbund$v1_ml <- vOne # append
+  }
+  
+  # import v2 df
+  vTwoDf <- suppressMessages(
+    read_excel(
+      wkbk
+      ,sheet = sheetName
+      ,range = 'C12:D12'
+      ,col_types = 'numeric'
+      ,col_names = F
+    )
+  )
+  
+  # grab value/append to df
+  if (sum(vTwoDf, na.rm = TRUE) == 0) {
+    print(paste('Check sheet',sheetName)) # error in sheet
+    dfAbund$v2_ml <- NA # append NA
+  } else {
+    vTwo <- vTwoDf[,colSums(is.na(vTwoDf)) == 0][[1]] # collapse to value
+    dfAbund$v2_ml <- vTwo # append
+  }
+  
+  # import v_sed df
+  df_vsed <- suppressMessages(
+    read_excel(
+      wkbk
+      ,sheet = sheetName
+      ,range = 'M12:R12'
+      ,col_types = 'numeric'
+      ,col_names = F
+    )
+  )
+  
+  # grab value/append to df
+  v_sed <- df_vsed[,colSums(is.na(df_vsed)) == 0][[1]] # collapse to value
+  dfAbund$vsed_ml <- v_sed # append
+
   return(dfAbund)
 }
