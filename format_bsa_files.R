@@ -46,23 +46,44 @@ for (wkbk in excelFile) {
     # ----
     # Extract the Metadata
     # ----
-    # add in date/time
-    dfAbund <- add_date_time(wkbk, dfAbund) 
+    
+    # add project name
+    dfAbund <- add_proj_name(wkbk, sheetName, dfAbund)
     
     # add station name
-    dfAbund <- add_station_name(wkbk, dfAbund)
+    dfAbund <- add_station_name(wkbk, sheetName, dfAbund)
     
-    # add v1 and v2
-    dfAbund <- add_vols(wkbk, dfAbund)
+    # add in date/time
+    dfAbund <- add_date_time(wkbk, sheetName, dfAbund) 
+    
+    # add sample number
+    dfAbund <- add_samp_num(wkbk, sheetName, dfAbund) 
+    
+    # add tow
+    dfAbund <- add_tow(wkbk, sheetName, dfAbund)
+    
+    # add numer of jars
+    dfAbund <- add_jar_num(wkbk, sheetName, dfAbund)
+    
+    # add numer of vials
+    dfAbund <- add_vial_num(wkbk, sheetName, dfAbund)
+    
+    # add BSA metadata
+    dfAbund <- add_bsa_meta(wkbk, sheetName, dfAbund)
+    
+    # add v1, v2, and vsed
+    dfAbund <- add_vols(wkbk, sheetName, dfAbund)
     
     # add sub1 and sub2
-    dfAbund <- add_subs(wkbk, dfAbund)
-
+    dfAbund <- add_subs(wkbk, sheetName, dfAbund)
+    
     # ----
     # Export Dataframe 
     # ----
     # reorganize columns
-    dfAbund <- dfAbund[,c('station','date','time','category','taxon','count','subsample','v1_ml','sub1_ml','v2_ml','sub2_ml')]
+    dfAbund <- dfAbund[,c('project','station','date','time','samp_num','tow',
+                          'id_by','scope','mag','id_date','num_of_jars','num_of_vials',
+                          'category','taxon','count','subsample','v1_ml','sub1_ml','v2_ml','sub2_ml','vsed_ml')]
     
     # export CSV files into own folder
     fullPath <- paste(outputPath,excelName,'/', sep = '')
