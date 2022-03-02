@@ -1,7 +1,47 @@
+# ---
+# add SAM code
+# ---
+add_SAM_code <- function(wkbk, sheetName, dfAbund) {
+  df_SAM <- suppressMessages(
+    read_excel(
+      wkbk,
+      sheet = sheetName,
+      range = 'A1:K1',
+      col_names = F
+    )
+  )
+
+  SAMStr <- unlist(dfSAM, use.names = FALSE) %>% paste(.,collapse = '')
+  
+  dfAbund$SAM_code <- trimws(SAMStr)
+  
+  return(dfAbund)
+}
+
+# ---
+# add sample ID
+# ---
+add_samp_id <- function(wkbk, sheetName, dfAbund) {
+  df_sampid <- suppressMessages(
+    read_excel(
+      wkbk,
+      sheet = sheetName,
+      range = 'A9:D9',
+      col_names = F
+    )
+  )
+  
+  sampid_str <- unlist(df_sampid, use.names = FALSE) %>% paste(.,collapse = '')
+  
+  dfAbund$samp_id <- trimws(sampid_str)
+  
+  return(dfAbund)
+}
+
+  
 # ----
 # add datetime cols
 # ----
-
 add_date_time <- function(wkbk, sheetName, dfAbund) {
   dfDate <- suppressMessages(
     read_excel(
@@ -25,17 +65,16 @@ add_date_time <- function(wkbk, sheetName, dfAbund) {
     read_excel(
       wkbk,
       sheet = sheetName,
-      range = 'F9',
-      col_types = 'date',
+      range = 'F9:I9',
+      col_types = 'text',
       col_names = F
-      )
     )
+  )
   
-  # format timestamp
-  timeDate <- strptime(dfTime[[1]], "%Y-%m-%d %H:%M:%S") %>% format(., '%H:%M')
-
-  # add time to df
-  dfAbund$time <- timeDate
+  timeStr <- unlist(dfTime, use.names = FALSE) %>% paste(.,collapse = '')
+  timeStr <- str_replace_all(timeStr,'NA','')
+  
+  dfAbund$time <- trimws(timeStr)
   
   return(dfAbund)
 }
@@ -237,7 +276,7 @@ add_bottom_meta <- function(wkbk, sheetName, df) {
   df$high_silt <- is.na(df_bot[[9]][1])
   df$no_micro_tally <- is.na(df_bot[[13]][1])
   df$no_meso_tally <- is.na(df_bot[[20]][1])
-  df$net_size <- ifelse(is.na(df_bot[[5]][2]), '50um', '150um')
+  df$net_size_um <- ifelse(is.na(df_bot[[5]][2]), '50', '150')
   
   return(df)
 }
@@ -338,7 +377,6 @@ add_vols <- function(wkbk, sheetName, dfAbund){
       wkbk
       ,sheet = sheetName
       ,range = 'M12:R12'
-      ,col_types = 'numeric'
       ,col_names = F
     )
   )
@@ -347,5 +385,25 @@ add_vols <- function(wkbk, sheetName, dfAbund){
   v_sed <- df_vsed[,colSums(is.na(df_vsed)) == 0][[1]] # collapse to value
   dfAbund$vsed_ml <- v_sed # append
 
+  return(dfAbund)
+}
+
+# ---
+# add additional comments
+# ---
+add_comments <- function(wkbk, sheetName, dfAbund) {
+  df_comms <- suppressMessages(
+    read_excel(
+      wkbk,
+      sheet = sheetName,
+      range = 'E102:X102',
+      col_names = F
+    )
+  )
+  
+  commStr <- unlist(df_comms, use.names = FALSE) %>% paste(.,collapse = '')
+  
+  dfAbund$comments <- trimws(commStr)
+  
   return(dfAbund)
 }
