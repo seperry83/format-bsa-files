@@ -11,7 +11,7 @@ add_SAM_code <- function(wkbk, sheetName, dfAbund) {
     )
   )
 
-  SAMStr <- unlist(dfSAM, use.names = FALSE) %>% paste(.,collapse = '')
+  SAMStr <- unlist(df_SAM, use.names = FALSE) %>% paste(.,collapse = '')
   
   dfAbund$SAM_code <- trimws(SAMStr)
   
